@@ -1,1 +1,1 @@
-# social-app-mern
+# social-chat-app
