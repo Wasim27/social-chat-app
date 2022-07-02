@@ -1,9 +1,30 @@
-import React from 'react'
+import React, { useState } from "react";
+import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
+import Chat from "./components/Chat";
+import styled from "styled-components";
 
 const App = () => {
-  return (
-    <div>App</div>
-  )
-}
+  const [currentChannel, setCurrentChannel] = useState('');
 
-export default App
+  const handleChannelClick = (e) => {
+    setCurrentChannel(e)
+  }
+
+  return (
+    <div>
+      <Header />
+      <Main>
+        <Sidebar handleChannelClick={handleChannelClick} />
+        <Chat currentChannel={currentChannel} />
+      </Main>
+    </div>
+  );
+};
+
+export default App;
+
+const Main = styled.div`
+  display: flex;
+  height: 100vh;
+`;

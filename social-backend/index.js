@@ -1,3 +1,4 @@
+const { GraphQLDateTime } = require('graphql-iso-date');
 require('dotenv').config();
 
 const {
@@ -23,17 +24,23 @@ mongoose
     console.log('error connecting to MongoDB', error.message);
   });
 
+const customScalarResolver = {
+  Date: GraphQLDateTime,
+};
+
 const typeDefs = gql`
+  scalar Date
+
   type Channel {
     name: String!
     messageCount: Int
-    messages: [Message]
+    messages: [Message!]!
     id: ID!
   }
 
   type Message {
     body: String!
-    published: Int!
+    published: Date!
     channel: Channel!
     id: ID!
   }
@@ -42,12 +49,12 @@ const typeDefs = gql`
     channelCount: Int!
     messageCount: Int!
     allChannels: [Channel!]!
-    findChannel(id: ID!): Channel
+    findChannel(id: String!): Channel
   }
 
   type Mutation {
     createChannel(name: String!): Channel
-    createMessage(body: String!, published: Int!, channel: String!): Message
+    createMessage(body: String!, published: Date!, channel: String!): Message
   }
 `;
 
@@ -58,7 +65,9 @@ const resolvers = {
     allChannels: async (root, args) => {
       return Channel.find({});
     },
-    findChannel: async (root, args) => Channel.findOne({ id: args.id }),
+    findChannel: async (root, args) => {
+      return Channel.findById(args.id);
+    },
   },
 
   Channel: {
@@ -102,6 +111,7 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
+  customScalarResolver,
   typeDefs,
   resolvers,
 });

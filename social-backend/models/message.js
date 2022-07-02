@@ -11,10 +11,12 @@ const schema = new mongoose.Schema({
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: 'User',
   // },
-  channel: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Channel',
-  },
+  channel: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Channel',
+    },
+  ],
 });
 
 module.exports = mongoose.model('Message', schema);
