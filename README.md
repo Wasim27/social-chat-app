@@ -1,1 +1,2 @@
-# social-app-mern
+# social-chat-app
+Work In Progress using React, Apollo Server, GraphQL and MongoDB...
