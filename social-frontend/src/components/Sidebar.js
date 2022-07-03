@@ -12,25 +12,31 @@ const ALL_CHANNELS = gql`
   }
 `;
 
-const Sidebar = ({ handleChannelClick }) => {
+const Sidebar = ({ handleChannelClick, currentChannel }) => {
   const [channels, setChannels] = useState([]);
 
   const channelResult = useQuery(ALL_CHANNELS, {
     pollInterval: 2000,
-  })
+  });
 
   useEffect(() => {
     if (channelResult.data) {
-      setChannels(channelResult.data.allChannels)
+      setChannels(channelResult.data.allChannels);
     }
-  }, [channelResult])
+  }, [channelResult]);
 
   return (
     <SidebarContainer>
-      <SidebarUserInfo>Name</SidebarUserInfo>
+      <SidebarUserInfo>CHANNELS</SidebarUserInfo>
       <SidebarChannels>
         {channels.map((c) => (
-          <Channel handleChannelClick={handleChannelClick} name={c.name} id={c.id} key={c.id}/>
+          <Channel
+            handleChannelClick={handleChannelClick}
+            name={c.name}
+            id={c.id}
+            key={c.id}
+            currentChannel={currentChannel}
+          />
         ))}
       </SidebarChannels>
     </SidebarContainer>
@@ -40,15 +46,26 @@ const Sidebar = ({ handleChannelClick }) => {
 export default Sidebar;
 
 const SidebarContainer = styled.div`
-  background-color: #302f2b;
+  background-color: #403f47;
   margin-top: 35px;
   max-width: 260px;
   flex: 0.2;
   color: white;
+  font-family: 'Lato', sans-serif;
 `;
 
-const SidebarUserInfo = styled.div``;
+const SidebarUserInfo = styled.div`
+  padding: 1rem 1rem;
+  font-size: 0.7em;
+  font-weight: 400;
+
+  &:hover {
+    color: white;
+  }
+`;
 
 const SidebarChannels = styled.div`
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
 `;

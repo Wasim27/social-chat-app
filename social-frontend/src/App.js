@@ -5,17 +5,20 @@ import Chat from "./components/Chat";
 import styled from "styled-components";
 
 const App = () => {
-  const [currentChannel, setCurrentChannel] = useState('');
+  const [currentChannel, setCurrentChannel] = useState("");
 
   const handleChannelClick = (e) => {
-    setCurrentChannel(e)
-  }
+    setCurrentChannel(e);
+  };
 
   return (
     <div>
       <Header />
       <Main>
-        <Sidebar handleChannelClick={handleChannelClick} />
+        <Sidebar
+          handleChannelClick={handleChannelClick}
+          currentChannel={currentChannel}
+        />
         <Chat currentChannel={currentChannel} />
       </Main>
     </div>

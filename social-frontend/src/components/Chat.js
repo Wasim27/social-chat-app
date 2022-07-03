@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { gql, useQuery, useMutation } from "@apollo/client";
+import Message from "./Message";
 
 const GET_CHANNEL_MESSAGES = gql`
   query FindChannel($id: String!) {
@@ -34,14 +35,14 @@ const Chat = ({ currentChannel }) => {
 
   const [createMessage, result] = useMutation(CREATE_MESSAGE);
 
-  if (!currentChannel) return <div>chat</div>;
+  if (!currentChannel) return <ChatContainer>Select Channel</ChatContainer>;
 
   if (loading) return <div>loading...</div>;
   if (error) return <div>error</div>;
 
   const submit = (e) => {
     e.preventDefault();
-    const currentTimeInSeconds = new Date().getTime();;
+    const currentTimeInSeconds = new Date().getTime();
 
     createMessage({
       variables: {
@@ -56,17 +57,21 @@ const Chat = ({ currentChannel }) => {
   return (
     <ChatContainer>
       {data.findChannel.messages.map((m) => (
-        <div key={m.id}>{m.body}</div>
+        <Message key={m.id} body={m.body} />
       ))}
-      <form onSubmit={submit}>
-        <input
-          type="text"
-          value={body}
-          onChange={({ target }) => setBody(target.value)}
-          placeholder="Enter Message"
-        />
-        <button type="submit">Send</button>
-      </form>
+      <ChatBox>
+        <ChatMessage>
+          <form onSubmit={submit}>
+            <textarea
+              type="text"
+              value={body}
+              onChange={({ target }) => setBody(target.value)}
+              placeholder="Enter Message"
+            />
+            <button type="submit">Send</button>
+          </form>
+        </ChatMessage>
+      </ChatBox>
     </ChatContainer>
   );
 };
@@ -76,6 +81,41 @@ export default Chat;
 const ChatContainer = styled.div`
   color: white;
   margin-top: 35px;
-  background-color: red;
+  background-color: #323236;
   flex: 1;
+`;
+
+const ChatBox = styled.div`
+  display: flex;
+  color: red;
+`;
+
+const ChatMessage = styled.div`
+  margin-right: 10px;
+  padding: 30px;
+  position: fixed;
+  right: 10px;
+  bottom: 5px;
+
+  textarea {
+    width: 100%;
+    border: none;
+    padding: 10px 20px;
+    font: 14px/22px "Lato", Arial, sans-serif;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    resize: none;
+  }
+
+  button {
+    position: absolute;
+    right: 5px;
+    color: green;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    background: none;
+    padding: 5px;
+  }
 `;
